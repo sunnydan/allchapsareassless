@@ -1,0 +1,12 @@
+{% extends "base.html" %} {% block content %}
+<form action="/processregister" method="post">
+    <fieldset>
+        <legend>Registration</legend>
+        {% csrf_token %} {{ form.as_p }}
+        <input type="submit" value="Register" />
+        <a href="/accounts/login">
+            <button type="button">Already have an account? Login here.</button>
+        </a>
+    </fieldset>
+</form>
+{% endblock %}
