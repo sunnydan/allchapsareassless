@@ -1,10 +1,29 @@
-{% extends "base.html" %} {% block content %}
-<form action="/accounts/login/" method="post">
-    <fieldset>
-        <legend>Login</legend>
-        {% csrf_token %} {{ form.as_p }}
-        <input type="submit" value="Login" />
-        <a href="/accounts/register"><button type="button">Don't have an account? Register here.</button></a>
-    </fieldset>
+{% extends "base.html" %}
+<!---->
+{% block title %}Login{% endblock %}
+<!---->
+{% block content %}
+<!---->
+{% if form.errors %}
+<p class="red-text">Your email and password didn't match. Please try again.</p>
+{% endif %}
+<!---->
+
+<form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+    <!---->
+    {% for field in form %}
+    <div class="input-field">
+        {{field}} {{ field.label_tag }}
+    </div>
+    {% for error in field.errors %}
+    <p style="color: red">{{ error }}</p>
+    {% endfor %}
+    <!---->
+    {% endfor %}
+    <input class="btn" type="submit" value="Login" />
+    <input type="hidden" name="next" value="{{ next }}" />
+    <a href="{% url 'password_reset' %}" class="btn">Lost password?</a>
 </form>
+<a href="/accounts/register" class="btn">Don't have an account? Register here.</a>
 {% endblock %}

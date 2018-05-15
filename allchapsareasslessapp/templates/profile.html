@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+<!---->
+{% block title %}Profile{% endblock %}
+<!---->
+{% block content %}
+<script>
+    $(document).ready(() => {
+        $(".cdnbutton").click(() => {
+            var newDisplayName = prompt("Enter a new Display Name:");
+            if (newDisplayName != "") {
+                $("#displaynamefield").val(newDisplayName);
+                $("#profileform").submit();
+            }
+        })
+
+        $(".cuabutton").click(() => {
+            $("#avatarfield").trigger("click");
+        })
+
+        $("#avatarfield").change(() => {
+            $("#profileform").submit();
+        })
+    })
+</script>
+<form id="profileform" action="/updateuser" style="display: none;" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input id="displaynamefield" type="text" name="displayName">
+    <input id="avatarfield" type="file" name="avatar">
+</form>
+<div style="position: relative;" class="card-panel green darken-4 white-text">
+    <div style="margin-bottom: 15px;">
+        <img style="vertical-align: middle; margin-right: 15px; height: 8vh; width: 8vh;" class="circle" src="{{ MEDIA_URL }}{{ user.avatar }}">
+        <h1 style="display: inline; vertical-align: middle; font-size: 5vw;" class="header">{% include 'snippets/name.html' %}</h1>
+    </div>
+    <div style="margin-bottom: 0;" class="row">
+        <div class="col s12 m4 l3">
+            <span>
+                <i class="material-icons left">photo</i>Cards: {{ user.cards.count }}</span>
+        </div>
+        <div class="col s12 l3">
+            <span>
+                <i class="material-icons left">photo_library</i>Decks: {{ user.decks.count }}</span>
+        </div>
+        <div class="col s12 l3">
+            <span>
+                <i class="material-icons left">casino</i>Games Played: {{ user.gamesPlayed }}</span>
+        </div>
+        <div class="col s12 l3">
+            <span>
+                <i class="material-icons left">grade</i>Games Won: {{ user.gamesWon }}</span>
+        </div>
+    </div>
+</div>
+<div class="card-panel green darken-2 white-text">
+    <span class="card-title">
+        <i class="material-icons left">photo</i>Cards</span>
+</div>
+<div class="card-panel green white-text">
+    <span class="card-title">
+        <i class="material-icons left">photo_library</i>Decks</span>
+</div>
+
+{% endblock %}

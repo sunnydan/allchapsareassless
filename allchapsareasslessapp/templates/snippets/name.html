@@ -1,0 +1,5 @@
+{% if user.displayName != '' %}
+{{ user.displayName }}
+{% else %}
+{{ user.email }}
+{% endif %}

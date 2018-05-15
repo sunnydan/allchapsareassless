@@ -1,0 +1,117 @@
+{% load staticfiles %}
+
+<nav>
+    <div class="nav-wrapper light-blue">
+        <a href="/" class="hide-on-med-and-down">
+            <img style="height: 100%;" src="{% static 'images/chapswhitepadding.png' %}" alt="chapslogo" />
+        </a>
+        <a href="#" style="margin: 0;" data-target="mobile-demo" class="hide-on-large-only sidenav-trigger">
+            <img style="height: 100%;" src="{% static 'images/chapswhitepaddinghamburger.png' %}" alt="chapslogo" />
+        </a>
+        <a href="/" class="brand-logo">{{ title }}</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li class="waves-effect">
+                <a href="#">
+                    <i class="material-icons left">navigation</i>New Game</a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="material-icons left">near_me</i>Join Game</a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="material-icons left">photo</i>Cards</a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="material-icons left">photo_library</i>Decks</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li>
+                <a class="dropdown-trigger" style="min-width: 240px;" href="#!" data-target="userdropdown">
+                    <img id="avatar" onload="$('#avatar').width($('#avatar').height());" style="height: 50%; vertical-align: middle; margin-bottom: 5px; margin-right: 15px;" class="circle"
+                        src="{{ MEDIA_URL }}{{ user.avatar }}"> {% include 'snippets/name.html' %}
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+            </li>
+            <ul style="margin-top: 30px;" id="userdropdown" class="dropdown-content">
+                {% if title != "Profile" %}
+                <li>
+                    <a href="/accounts/profile">
+                        <i class="material-icons left">account_circle</i>Profile</a>
+                </li>
+                {% else %}
+                <li>
+                    <a class="cdnbutton" href="#!">
+                        <i class="material-icons left">assignment_ind</i>Change Display Name</a>
+                </li>
+                <li>
+                    <a class="cuabutton" href="#!">
+                        <i class="material-icons left">account_circle</i>Change User Avatar</a>
+                </li>
+                {% endif %}
+                <li class="divider"></li>
+                <li>
+                    <a href="/accounts/logout">
+                        <i class="material-icons left">power_settings_new</i>Logout</a>
+                </li>
+            </ul>
+            {% else %}
+            <li>
+                <a class="btn-small" href="{% url 'login' %}">Login</a>
+            </li>
+            <li>
+                <a class="btn-small" href="/accounts/register">Register</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <ul class="sidenav" id="mobile-demo">
+        <li>
+            <a href="/">
+                <i class="material-icons left">home</i>Home</a>
+        </li>
+        {% if user.is_authenticated %}
+        <!---->
+        {% if title != "Profile" %}
+        <li>
+            <a href="/accounts/profile">
+                <i class="material-icons left">account_circle</i>Profile</a>
+        </li>
+        {% else %}
+        <li>
+            <a class="cdnbutton" href="#!">
+                <i class="material-icons left">assignment_ind</i>Change Display Name</a>
+        </li>
+        <li>
+            <a class="cuabutton" href="#!">
+                <i class="material-icons left">account_circle</i>Change User Avatar</a>
+        </li>
+        {% endif %}
+        <li>
+            <a href="#!">
+                <i class="material-icons left">settings</i>Settings</a>
+        </li>
+        <li class="divider"></li>
+        <li>
+            <a href="/accounts/logout">
+                <i class="material-icons left">power_settings_new</i>Logout</a>
+        </li>
+        {% else %}
+        <li>
+            <a href="{% url 'login' %}">Login</a>
+        </li>
+        <li>
+            <a href="/accounts/register">Register</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+<script>
+    $("#avatar").ready(() => {
+        $(window).resize(() => {
+            $("#avatar").width($("#avatar").height());
+        })
+    })
+</script>

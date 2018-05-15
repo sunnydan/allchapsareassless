@@ -1,12 +1,21 @@
-{% extends "base.html" %} {% block content %}
-<form action="/processregister" method="post">
-    <fieldset>
-        <legend>Registration</legend>
-        {% csrf_token %} {{ form.as_p }}
-        <input type="submit" value="Register" />
-        <a href="/accounts/login">
-            <button type="button">Already have an account? Login here.</button>
-        </a>
-    </fieldset>
+{% extends "base.html" %}
+<!---->
+{% block title %}Register{% endblock %}
+<!---->
+{% block content %}
+<form method="post" action="/accounts/register">
+    {% csrf_token %}
+    <!---->
+    {% for field in form %}
+    <div class="input-field">
+        {{field}} {{ field.label_tag }}
+    </div>
+    {% for error in field.errors %}
+    <p style="color: red">{{ error }}</p>
+    {% endfor %}
+    <!---->
+    {% endfor %}
+    <input class="btn" type="submit" value="Register" style="margin-bottom: 5px;"/>
+    <a href="{% url 'login' %}" class="btn" style="margin-bottom: 5px">Already have an account? Login here.</a>
 </form>
 {% endblock %}

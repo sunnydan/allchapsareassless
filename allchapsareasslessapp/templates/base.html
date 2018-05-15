@@ -5,22 +5,26 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}" media="screen,projection"
     />
+    <link type="text/css" rel="stylesheet" href="{% static 'CSS/base.css' %}" media="screen,projection" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 </head>
 
 <body>
-    <div class="nav-wrapper container">
-        <a href="/">
-            <img id="logo-container" class="brand-logo" src="{% static 'images/chapslogo.png' %}" alt="pants" />
-        </a>
-        <h1 style="display: inline;">
-            <a href="/about">All Chaps Are Assless</a>
-        </h1>
-        <i>an online clone of the comic-building card game,
-            <a href="https://store.explosm.net/products/joking-hazard-1">"Joking Hazard"</a> by the makers of
-            <a href="https://explosm.net">Cyanide and Happiness</a>
-        </i>
-    </div>
-    <hr> {% block content %} {% endblock %}
-    <script type="text/javascript" src="{% static 'materialize/js/materialize.min.js' %}"></script>
+    <header>
+        {% include 'nav.html' with title=title %}
+    </header>
+    <main class="container">
+        {% block content %} {% endblock %}
+    </main>
+    <footer class="page-footer white container black-text">
+        {% block footer %}{% endblock %}
+    </footer>
 </body>
+<script type="text/javascript" src="{% static 'materialize/js/materialize.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('.sidenav').sidenav();
+        $(".dropdown-trigger").dropdown();
+    });
+</script>

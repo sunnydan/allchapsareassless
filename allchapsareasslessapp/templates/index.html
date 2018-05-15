@@ -1,6 +1,39 @@
-{% extends "base.html" %}
-
-{% block content %}
-<a href="/accounts/login">Login</a>
-<a href="/accounts/register">Register</a>
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
+<h1>All Chaps Are Assless</h1>
+<p>
+    a fan clone of the comic-building card game:
+    <a href="http://explosm.net/joking-hazard">Joking Hazard</a>, from the makers of
+    <a href="http://explosm.net">Cyanide and Happiness</a>
+</p>
+<a href="/howtoplay" class="btn">How to play</a>
+<h4>Why is it called
+    <i>that?</i>
+</h4>
+<p>Cyanide and Happiness, and the people I like to hang out with have something in common: a silly, good-naturedly irreverant
+    sense of humor. I wanted to find a name for this website that, although entirely unrelated to "Cyanide and Happiness,"
+    evoked that same sense of silliness and humor. The name came off a long list of silly and irreverant things that my friends
+    and I have said over the years while hanging out with each other. The list has been, and is still being, recorded by
+    my friend Ben. A couple other hot contenders from that list were "Ostriches and LSD", "Asiago Dreams", and
+    "We are really proud of this meat." We're a kinda weird bunch.</p>
+<h4>Credits</h4>
+<ul>
+    <li>- Website programmed and designed by
+        <a href="http://sunnydan.github.io">Daniel Hilla</a>
+    </li>
+    <li>- Orignal "pants" icon created by
+        <a href="https://thenounproject.com/Chamedesign/">Chameleon Design</a> from
+        <a href="https://thenounproject.com/">Noun Project</a>, modified by Daniel Hilla</li>
+    <li>-
+        <a href="http://materializecss.com/">Materialize</a> CSS Framework created by the Materialize Team, and used under the MIT license</li>
+    <li>
+        - Joking Hazard is the property of Explosm LLC, and can (and should!) be purchased
+        <a href="https://store.explosm.net/products/joking-hazard-1">here</a>. This web version is in no way endorsed, sponsored by, or affliated with Explosm.net, and makes use of no
+        copyrighted words or images from Joking Hazard. It is distributed under a
+        <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons - Attribution - Noncommercial - Share Alike license</a>. You may download the source code to this
+        version from
+        <a href="">GitHub</a>.
+    </li>
+</ul>
 {% endblock %}
+
+{% block footer %}please don't push this site too hard, it's basically running on a toaster{% endblock %}
