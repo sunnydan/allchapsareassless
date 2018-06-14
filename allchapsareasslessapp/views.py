@@ -4,17 +4,10 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import ModelForm
-from allchapsareasslessapp.models import User, UserManager
+from allchapsareasslessapp.models import User, UserManager, Card, Tag, Deck
 from allchapsareasslessapp.forms import RegistrationForm
-from PIL import Image
-from django.conf import settings
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from io import BytesIO
-from django.core.files.base import ContentFile
-import os
-import glob
-
-AVATAR_IMAGE_SIZE = settings.AVATAR_IMAGE_SIZE
+from allchapsareasslessapp.util import handleAvatarUpdate
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def index(request):
@@ -22,6 +15,121 @@ def index(request):
         "title": "Home",
     }
     return render(request, "index.html", context)
+
+
+def cards(request):
+    context = {
+        "title": "Cards",
+        "cards": Card.objects.all(),
+    }
+    return render(request, "cards/cards.html", context)
+
+
+def newcard(request):
+    if request.method == "POST" and request.user.is_authenticated:
+        card = Card.objects.create_card(
+            request.user, request.POST['svg'], request.POST['snapshot'])
+        newtagstrings = request.POST['tags'].split(",")
+        for newtagstring in newtagstrings:
+            newtagstring = newtagstring.strip()
+        for newtagstring in newtagstrings:
+            try:
+                tag = Tag.objects.get(name=newtagstring)
+            except ObjectDoesNotExist:
+                tag = Tag.objects.create_tag(newtagstring)
+            if not card in tag.cards.all():
+                tag.cards.add(card)
+            tag.save()
+        card.save()
+    return redirect("/cards")
+
+
+def likecard(request):
+    card = Card.objects.get(id=request.POST["cardid"])
+    if request.method == "POST" and request.user.is_authenticated and not request.user in card.likingUsers.all():
+        card.likingUsers.add(request.user)
+        card.save()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("failure")
+
+
+def unlikecard(request):
+    card = Card.objects.get(id=request.POST["cardid"])
+    if request.method == "POST" and request.user.is_authenticated and request.user in card.likingUsers.all():
+        card.likingUsers.remove(request.user)
+        card.save()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("failure")
+
+
+def deletecard(request):
+    card = Card.objects.get(id=request.POST["cardid"])
+    if request.method == "POST" and request.user.is_authenticated and card in request.user.cards.all():
+        card.delete()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("failure")
+
+
+def newdeck(request):
+    if request.method == "POST" and request.user.is_authenticated:
+        Deck.objects.create_deck(request.POST["name"], request.user)
+        return HttpResponse("success")
+    else:
+        return HttpResponse("failure")
+
+
+def updatedeck(request):
+    deck = Deck.objects.get(id=request.POST["deckid"])
+    if request.method == "POST" and request.user.is_authenticated and deck.author == request.user:
+        newtagstrings = request.POST['tags'].split(",")
+        for newtagstring in newtagstrings:
+            newtagstring = newtagstring.strip()
+        for newtagstring in newtagstrings:
+            try:
+                tag = Tag.objects.get(name=newtagstring)
+            except ObjectDoesNotExist:
+                tag = Tag.objects.create_tag(newtagstring)
+            if not deck in tag.decks.all():
+                tag.decks.add(deck)
+            tag.save()
+        deck.save()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("failure")
+
+
+def addtodeck(request):
+    deck = Deck.objects.get(id=request.POST["deckid"])
+    if request.method == "POST" and request.user.is_authenticated and deck.author == request.user:
+        card = Card.objects.get(id=request.POST["cardid"])
+        deck.cards.add(card)
+        deck.save()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("failure")
+
+
+def removefromdeck(request):
+    deck = Deck.objects.get(id=request.POST["deckid"])
+    if request.method == "POST" and request.user.is_authenticated and deck.author == request.user:
+        card = Card.objects.get(id=request.POST["cardid"])
+        deck.cards.remove(card)
+        deck.save()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("failure")
+
+
+def deletedeck(request):
+    deck = Deck.objects.get(id=request.POST["deckid"])
+    if request.method == "POST" and request.user.is_authenticated and deck.author == request.user:
+        deck.delete()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("failure")
 
 
 def register(request):
@@ -51,6 +159,7 @@ class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         context = {
             "title": "Profile",
+            "cards": request.user.cards.all(),
         }
         return render(request, "profile.html", context)
 
@@ -61,35 +170,6 @@ def updateUser(request):
             request.user.displayName = request.POST.get("displayName")
             request.user.save()
         elif request.POST.get("avatar") != "":
-
-            for filename in os.listdir(settings.MEDIA_ROOT+"/avatars"):
-                if(filename.split(".")[0] == "avatar" + str(request.user.id)):
-                    os.remove(os.path.join(
-                        settings.MEDIA_ROOT+"\\avatars", filename))
-
-                filetype = request.FILES['avatar'].name.split(".")[-1]
-                if(filetype == "gif"):
-                    request.FILES['avatar'].name = "avatar" + str(request.user.id) + ".gif"
-                    request.user.avatar = request.FILES['avatar']
-                    request.user.save()
-                else:
-                    image = Image.open(request.FILES['avatar'])
-                    filetype = filetype.lower()
-
-                    if(filetype.lower() == "jpg"):
-                        filetype = "jpeg"
-
-                    image = image.resize(
-                        (AVATAR_IMAGE_SIZE, AVATAR_IMAGE_SIZE), Image.ANTIALIAS)
-
-                    tempfile = BytesIO()
-                    image.save(tempfile, filetype.lower())
-
-                    image = InMemoryUploadedFile(
-                        tempfile, None, "avatar" +
-                        str(request.user.id) + "." + filetype, tempfile.__sizeof__, None, None)
-                    request.user.avatar = image
-                    request.user.save()
-                    tempfile.close()
+            handleAvatarUpdate(request.FILES["avatar"], request.user)
 
     return redirect("/accounts/profile")

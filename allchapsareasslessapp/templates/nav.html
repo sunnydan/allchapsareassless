@@ -3,10 +3,10 @@
 <nav>
     <div class="nav-wrapper light-blue">
         <a href="/" class="hide-on-med-and-down">
-            <img style="height: 100%;" src="{% static 'images/chapswhitepadding.png' %}" alt="chapslogo" />
+            <img style="height: 100%; padding: 15px;" src="{% static 'images/flimsystripslogowhite.png' %}" alt="chapslogo" />
         </a>
-        <a href="#" style="margin: 0;" data-target="mobile-demo" class="hide-on-large-only sidenav-trigger">
-            <img style="height: 100%;" src="{% static 'images/chapswhitepaddinghamburger.png' %}" alt="chapslogo" />
+        <a href="#" data-target="mobile-demo" class="hide-on-large-only sidenav-trigger">
+                <i class="material-icons">menu</i>
         </a>
         <a href="/" class="brand-logo">{{ title }}</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -19,7 +19,7 @@
                     <i class="material-icons left">near_me</i>Join Game</a>
             </li>
             <li>
-                <a href="#">
+                <a href="/cards">
                     <i class="material-icons left">photo</i>Cards</a>
             </li>
             <li>
@@ -29,8 +29,7 @@
             {% if user.is_authenticated %}
             <li>
                 <a class="dropdown-trigger" style="min-width: 240px;" href="#!" data-target="userdropdown">
-                    <img id="avatar" onload="$('#avatar').width($('#avatar').height());" style="height: 50%; vertical-align: middle; margin-bottom: 5px; margin-right: 15px;" class="circle"
-                        src="{{ MEDIA_URL }}{{ user.avatar }}"> {% include 'snippets/name.html' %}
+                    <img style="height: 32px; width: 32px; vertical-align: middle; margin-bottom: 5px; margin-right: 15px;" class="circle" src="{{ MEDIA_URL }}{{ user.avatar }}"> {% include 'snippets/name.html' %}
                     <i class="material-icons right">arrow_drop_down</i>
                 </a>
             </li>
@@ -67,7 +66,7 @@
         </ul>
     </div>
 
-    <ul class="sidenav" id="mobile-demo">
+    <ul class="sidenav" id="mobile-demo" style="z-index: 1002;">
         <li>
             <a href="/">
                 <i class="material-icons left">home</i>Home</a>
@@ -108,10 +107,3 @@
         {% endif %}
     </ul>
 </nav>
-<script>
-    $("#avatar").ready(() => {
-        $(window).resize(() => {
-            $("#avatar").width($("#avatar").height());
-        })
-    })
-</script>

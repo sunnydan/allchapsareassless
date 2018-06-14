@@ -1,0 +1,53 @@
+{% load staticfiles %}
+
+<link href="{% static 'literallycanvas/css/literallycanvas.css' %}" rel="stylesheet">
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-with-addons.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
+<script src="{% static 'literallycanvas/js/literallycanvas.js' %}"></script>
+<!---->
+<div id="canvasmodal" class="modal" style="width: 334px; height: 470px;">
+    <div class="modal-content" style=" padding: 5px;">
+        <div class="my-drawing" style="width: 324px;"></div>
+    </div>
+    <div class="modal-footer" style="display: flex; justify-content: space-between;">
+        <a href="#!" class="btn modal-close waves-effect waves-green">
+            <i class="material-icons">close</i>
+        </a>
+        <form id="cardform" action="/newcard" method="POST">
+            {% csrf_token %}
+            <div class="input-field" style="margin: 0px;">
+                <input placeholder="comma separated tags" id="tags" type="text" name="tags" class="validate">
+            </div>
+            <textarea id="svgfield" name="svg" style="display: none;"></textarea>
+            <textarea id="snapshotfield" name="snapshot" style="display: none;"></textarea>
+        </form>
+        <a id="submitbutton" href="#!" class="btn waves-effect waves-green">
+            <i class="material-icons">save</i>
+        </a>
+    </div>
+</div>
+<script>
+    $(document).ready(() => {
+        var canvasliterally = null;
+        $('#canvasmodal').modal({
+            onOpenEnd: canvasInit
+        });
+        function canvasInit() {
+            if (canvasliterally == null) {
+                canvasliterally = LC.init(
+                    document.getElementsByClassName('my-drawing')[0],
+                    {
+                        imageURLPrefix: "{% static 'literallycanvas/img/' %}",
+                        imageSize: { width: 263, height: 369 },
+                        backgroundColor: '#fff'
+                    });
+            }
+        }
+        $("#submitbutton").click(() => {
+            console.log("submitting image");
+            $("#svgfield").val(canvasliterally.getSVGString());
+            $("#snapshotfield").val(JSON.stringify(canvasliterally.getSnapshot()));
+            $("#cardform").submit();
+        })
+    })
+</script>

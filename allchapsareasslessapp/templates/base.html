@@ -1,16 +1,19 @@
 {% load staticfiles %}
 
 <head>
-    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{% static 'images/flimsystripslogo.ico' %}" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}" media="screen,projection"
     />
     <link type="text/css" rel="stylesheet" href="{% static 'CSS/base.css' %}" media="screen,projection" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="{% static 'scripts/index.js' %}"></script>
+    <title>{{title}}</title>
+    {% block head %} {% endblock %}
 </head>
 
-<body>
+<body id="body">
     <header>
         {% include 'nav.html' with title=title %}
     </header>
@@ -23,8 +26,8 @@
 </body>
 <script type="text/javascript" src="{% static 'materialize/js/materialize.min.js' %}"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(() => {
         $('.sidenav').sidenav();
         $(".dropdown-trigger").dropdown();
-    });
+    })
 </script>

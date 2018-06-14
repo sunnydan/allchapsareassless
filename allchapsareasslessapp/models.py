@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
-from datetime import datetime
+from django.utils import timezone
+import pytz
 from django.conf import settings
 from allchapsareasslessapp.storage import OverwriteStorage
 
@@ -48,7 +49,7 @@ class User(AbstractUser):
     displayName = models.CharField(max_length=30)
     avatar = models.ImageField(
         upload_to='avatars/', default='/avatars/default.png', storage=OverwriteStorage())
-    memberSince = models.DateTimeField(default=datetime.now, blank=True)
+    memberSince = models.DateTimeField(default=timezone.now, blank=True)
     gamesPlayed = models.IntegerField(default=0)
     gamesWon = models.IntegerField(default=0)
     roundsWon = models.IntegerField(default=0)
@@ -61,27 +62,44 @@ class User(AbstractUser):
     objects = UserManager()
 
 
-class Card(models.Model):
-    image = models.ImageField(upload_to='cards/')
-    bonusCard = models.BooleanField(default=False)
-    private = models.BooleanField(default=False)
-    dateCreated = models.DateTimeField(default=datetime.now, blank=True)
+class CardManager(models.Manager):
+    def create_card(self, author, svg, snapshot):
+        card = self.create(author=author, svg=svg, snapshot=snapshot)
+        return card
 
+
+class Card(models.Model):
+    svg = models.TextField(default="")
+    snapshot = models.TextField(default="")
+    dateCreated = models.DateTimeField(default=timezone.now, blank=True)
     author = models.ForeignKey(
         User, related_name="cards", null=True, on_delete=models.SET_NULL)
     likingUsers = models.ManyToManyField(User, related_name="likedCards")
+    objects = CardManager()
+
+
+class DeckManager(models.Manager):
+    def create_deck(self, name, author):
+        deck = self.create(name=name, author=author)
+        return deck
 
 
 class Deck(models.Model):
     name = models.TextField(max_length=30, blank=False)
     description = models.TextField(max_length=255, blank=False)
-    private = models.BooleanField(default=False)
-    dateCreated = models.DateTimeField(default=datetime.now, blank=True)
+    dateCreated = models.DateTimeField(default=timezone.now, blank=True)
 
     author = models.ForeignKey(
         User, related_name="decks", null=True, on_delete=models.SET_NULL)
     likingUsers = models.ManyToManyField(User, related_name="likedDecks")
     cards = models.ManyToManyField(Card, related_name="decks")
+    objects = DeckManager()
+
+
+class TagManager(models.Manager):
+    def create_tag(self, name):
+        tag = self.create(name=name)
+        return tag
 
 
 class Tag(models.Model):
@@ -89,3 +107,4 @@ class Tag(models.Model):
 
     cards = models.ManyToManyField(Card, related_name="tags")
     decks = models.ManyToManyField(Deck, related_name="tags")
+    objects = TagManager()

@@ -1,0 +1,102 @@
+{% load staticfiles %}
+<!--START desktop cards-->
+<div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
+    {% for card in cards %}
+    <div id="cardsection{{card.id}}">
+        <span class="cardsvg" id="cardsvg{{card.id}}">{{ card.svg|safe }}</span>
+        <div id="card{{card.id}}buttons" class="cardbuttons" style="display: none;">
+            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                <a class="btn-small blue" style="text-align: left; height: 32px; line-height: 32px; margin-right: 5px; flex-grow: 1; text-overflow: ellipsis;">
+                    By: {{ card.author.displayName }}
+                </a>
+                <a class="btn-small blue lighten-1 likingusers likingusers{{card.id}}" style="width: 68px;">
+                    {{ card.likingUsers.count }}
+                </a>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                <a class="btn blue lighten-1" style="text-align: left; width: 153px; height: 32px; line-height: 32px; flex-grow: 1; text-overflow: ellipsis; overflow: hidden;
+                            white-space: nowrap;">
+                    {% for tag in card.tags.all %} {{ tag.name }}, {% endfor %}
+                </a>
+                {% if user.is_authenticated %}
+                <div style="margin-left: 5px;">
+                    <a data-target='deckdown{{card.id}}' id="addtodeckbutton{{card.id}}" class="dropdown-trigger btn-floating btn-small blue addtodeckbutton"
+                        title="Add to Deck">
+                        <i class="material-icons">add_to_photos</i>
+                    </a>
+                    <ul id='deckdown{{card.id}}' class='dropdown-content'>
+                        <li>
+                            <a class="newdeck">New</a>
+                        </li>
+                        <li class="divider"></li>
+                        {% for deck in user.decks.all %}
+                        <li>
+                            <a id="add{{card.id}}" title="deck{{deck.id}}" class="addtodeck">{{ deck.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% if user in card.likingUsers.all %}
+                    <a id="unlike{{card.id}}" class="btn-floating btn-small waves-effect waves-red blue unlike" title="Unlike">
+                        <i class="material-icons">star_half</i>
+                    </a>
+                    {% elif card.author != user %}
+                    <a id="like{{card.id}}" class="btn-floating btn-small waves-effect waves-yellow blue like" title="Like">
+                        <i class="material-icons">star</i>
+                    </a>
+                    {% endif %}
+                    <!---->
+                    {% if card.author == user %}
+                    <a id="delete{{card.id}}" class="btn-floating btn-small waves-effect waves-red blue delete" title="Delete Card">
+                        <i class="material-icons">close</i>
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!--END desktop cards-->
+<!--START mobile cards-->
+<div class="carousel hide-on-med-and-up" style="min-height: 450px;">
+    {% for card in cards %}
+    <div class="carousel-item cardsvg" href="#" style="width:263px; height: 100%;">
+        {{ card.svg|safe }}
+        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+            <a class="btn-small blue" style="text-align: left; height: 32px; line-height: 32px; margin-right: 5px; flex-grow: 1; text-overflow: ellipsis;">
+                By: {{ card.author.displayName }}
+            </a>
+            <a class="btn-small blue lighten-1" style="width: 68px;">
+                {{ card.likingUsers.count }}
+            </a>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+            <a class="btn blue lighten-1" style="text-align: left; width: 153px; height: 32px; line-height: 32px; margin-right: 5px; flex-grow: 1; text-overflow: ellipsis; overflow: hidden;
+                white-space: nowrap;">
+                {% for tag in card.tags.all %} {{ tag.name }}, {% endfor %}
+            </a>
+            <div>
+                <a class="btn-floating btn-small blue">
+                    <i class="material-icons">add_to_photos</i>
+                </a>
+                <a class="btn-floating btn-small waves-effect waves-yellow blue">
+                    <i class="material-icons">star</i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!--END mobile cards-->
+{% csrf_token %}
+<style>
+    .cardsvg svg {
+        border: solid black 5px;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+        margin: 7px;
+        cursor: pointer;
+    }
+</style>

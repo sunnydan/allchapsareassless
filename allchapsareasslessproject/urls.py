@@ -26,6 +26,16 @@ urlpatterns = [
     path('accounts/profile', views.ProfileView.as_view()),
     path('accounts/logoutuser', views.logoutuser),
     path('updateuser', views.updateUser),
+    path('cards', views.cards),
+    path('newcard', views.newcard),
+    path('likecard', views.likecard),
+    path('unlikecard', views.unlikecard),
+    path('deletecard', views.deletecard),
+    path('newdeck', views.newdeck),
+    path('updatedeck', views.updatedeck),
+    path('addtodeck', views.addtodeck),
+    path('removefromdeck', views.removefromdeck),
+    path('deletedeck', views.deletedeck),
     path('', views.index),
 ]
 

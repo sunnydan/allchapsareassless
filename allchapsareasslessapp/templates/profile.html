@@ -1,27 +1,7 @@
 {% extends "base.html" %}
-<!---->
-{% block title %}Profile{% endblock %}
+{% load staticfiles %}
 <!---->
 {% block content %}
-<script>
-    $(document).ready(() => {
-        $(".cdnbutton").click(() => {
-            var newDisplayName = prompt("Enter a new Display Name:");
-            if (newDisplayName != "") {
-                $("#displaynamefield").val(newDisplayName);
-                $("#profileform").submit();
-            }
-        })
-
-        $(".cuabutton").click(() => {
-            $("#avatarfield").trigger("click");
-        })
-
-        $("#avatarfield").change(() => {
-            $("#profileform").submit();
-        })
-    })
-</script>
 <form id="profileform" action="/updateuser" style="display: none;" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <input id="displaynamefield" type="text" name="displayName">
@@ -43,21 +23,65 @@
         </div>
         <div class="col s12 l3">
             <span>
-                <i class="material-icons left">casino</i>Games Played: {{ user.gamesPlayed }}</span>
+                <i class="material-icons left">videogame_asset</i>Games Played: {{ user.gamesPlayed }}</span>
         </div>
         <div class="col s12 l3">
             <span>
-                <i class="material-icons left">grade</i>Games Won: {{ user.gamesWon }}</span>
+                <i class="material-icons left">star</i>Games Won: {{ user.gamesWon }}</span>
         </div>
     </div>
 </div>
+<div class="card-panel green darken-3 white-text">
+    <span onclick="$('#cardbrowser').slideToggle();">
+        <i class="material-icons" style="margin-right: 5px; transform: translateY(5px)">photo</i>Cards ({{ user.cards.count }})
+        <i class="material-icons" style="transform: translateY(5px)">arrow_drop_down</i>
+    </span>
+    <div id="cardbrowser" style="display: none; height: 500px; overflow-y: scroll;">
+        {% include 'cards/cardbrowser.html' with cards=request.user.cards.all %}
+    </div>
+</div>
 <div class="card-panel green darken-2 white-text">
-    <span class="card-title">
-        <i class="material-icons left">photo</i>Cards</span>
+    <span onclick="$('#likedcardbrowser').slideToggle();">
+        <i class="material-icons" style="margin-right: 5px; transform: translateY(5px)">photo star</i>Liked Cards ({{ user.likedCards.count }})
+        <i class="material-icons" style="transform: translateY(5px)">arrow_drop_down</i>
+    </span>
+    <div id="likedcardbrowser" style="display: none; height: 500px; overflow-y: scroll;">
+        {% include 'cards/cardbrowser.html' with cards=request.user.likedCards.all %}
+    </div>
+</div>
+<div class="card-panel green darken-1 white-text">
+    <span onclick="$('#deckbrowser').slideToggle();">
+        <i class="material-icons" style="margin-right: 5px; transform: translateY(5px)">photo_library</i>Decks ({{ user.decks.count }})
+        <i class="material-icons" style="transform: translateY(5px)">arrow_drop_down</i>
+    </span>
+    <div id="deckbrowser" style="display: none; height: 500px; overflow-y: scroll;">
+    </div>
 </div>
 <div class="card-panel green white-text">
-    <span class="card-title">
-        <i class="material-icons left">photo_library</i>Decks</span>
+    <span onclick="$('#likeddeckbrowser').slideToggle();">
+        <i class="material-icons" style="margin-right: 5px; transform: translateY(5px)">photo_library star</i>Liked Decks ({{ user.likedDecks.count }})
+        <i class="material-icons" style="transform: translateY(5px)">arrow_drop_down</i>
+    </span>
+    <div id="likeddeckbrowser" style="display: none; height: 500px; overflow-y: scroll;">
+    </div>
 </div>
+<script type="text/javascript" src="{% static 'scripts/cardbrowser.js' %}"></script>
+<script>
+    $(document).ready(() => {
+        $(".cdnbutton").click(() => {
+            var newDisplayName = prompt("Enter a new Display Name:");
+            if (newDisplayName != "") {
+                $("#displaynamefield").val(newDisplayName);
+                $("#profileform").submit();
+            }
+        })
 
-{% endblock %}
+        $(".cuabutton").click(() => {
+            $("#avatarfield").trigger("click");
+        })
+
+        $("#avatarfield").change(() => {
+            $("#profileform").submit();
+        })
+    })
+</script> {% endblock %}
