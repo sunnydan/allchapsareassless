@@ -26,7 +26,7 @@
                     </a>
                     <ul id='deckdown{{card.id}}' class='dropdown-content'>
                         <li>
-                            <a class="newdeck">New</a>
+                            <a id="newdeck{{card.id}}" class="newdeck">New</a>
                         </li>
                         <li class="divider"></li>
                         {% for deck in user.decks.all %}

@@ -75,7 +75,10 @@ def deletecard(request):
 
 def newdeck(request):
     if request.method == "POST" and request.user.is_authenticated:
-        Deck.objects.create_deck(request.POST["name"], request.user)
+        deck = Deck.objects.create_deck(request.POST["name"], request.user)
+        card = Card.objects.get(id=request.POST["cardid"])
+        deck.cards.add(card)
+        deck.save()
         return HttpResponse("success")
     else:
         return HttpResponse("failure")

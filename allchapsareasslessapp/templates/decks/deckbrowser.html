@@ -1,0 +1,15 @@
+{% load staticfiles %}
+<!--START desktop decks-->
+<div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
+    {% for deck in decks %}
+    <div id="decksection{{deck.id}}">
+        <div style="position: relative; margin-top: 45px; margin-right: 45px; width: 277px; height: 383px;">
+            <span class="cardsvg" style="z-index: 3; position: absolute;">{{ deck.cards.all.0.svg|safe }}</span>
+            <span class="cardsvg" style="z-index: 2; position: absolute; left: 20px; top: -20px;">{{ deck.cards.all.1.svg|safe }}</span>
+            <span class="cardsvg" style="z-index: 1; position: absolute; left: 40px; top: -40px;">{{ deck.cards.all.2.svg|safe }}</span>
+        </div>
+        <span>{{ deck.name }}</span>
+    </div>
+    {% endfor %}
+</div>
+<!--END desktop decks-->

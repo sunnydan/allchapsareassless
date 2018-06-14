@@ -72,6 +72,7 @@ $(document).ready(function () {
     });
     $(".newdeck").click(function () {
         var deckname = prompt("Name for new deck:");
+        var cardid = this.id.substr(7);
         if (deckname != "") {
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
@@ -80,7 +81,7 @@ $(document).ready(function () {
                     }
                 }
             });
-            $.post("/newdeck", { name: deckname }).done(function (data) {
+            $.post("/newdeck", { name: deckname, cardid: cardid }).done(function (data) {
                 if (data == "success") {
                     location.reload();
                 } else {
@@ -92,7 +93,6 @@ $(document).ready(function () {
     $(".addtodeck").click(function () {
         var cardid = this.id.substr(3);
         var deckid = this.title.substr(4);
-        var deckname = prompt("Name for new deck:");
         $.ajaxSetup({
             beforeSend: function (xhr, settings) {
                 if (!(/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)) && !this.crossDomain) {
