@@ -53,7 +53,7 @@
         <i class="material-icons" style="margin-right: 5px; transform: translateY(5px)">photo_library</i>Decks ({{ user.decks.count }})
         <i class="material-icons" style="transform: translateY(5px)">arrow_drop_down</i>
     </span>
-    <div id="deckbrowser" style="display: none; height: 500px; overflow-y: scroll;">
+    <div id="deckbrowser" style="display: none; height: 550px; overflow-y: scroll;">
         {% include 'decks/deckbrowser.html' with decks=request.user.decks.all %}
     </div>
 </div>
@@ -62,7 +62,7 @@
         <i class="material-icons" style="margin-right: 5px; transform: translateY(5px)">photo_library star</i>Liked Decks ({{ user.likedDecks.count }})
         <i class="material-icons" style="transform: translateY(5px)">arrow_drop_down</i>
     </span>
-    <div id="likeddeckbrowser" style="display: none; height: 500px; overflow-y: scroll;">
+    <div id="likeddeckbrowser" style="display: none; height: 550px; overflow-y: scroll;">
             {% include 'decks/deckbrowser.html' with decks=request.user.likedDecks.all %}
     </div>
 </div>

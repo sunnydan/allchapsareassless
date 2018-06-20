@@ -73,6 +73,14 @@ def deletecard(request):
         return HttpResponse("failure")
 
 
+def decks(request):
+    context = {
+        "title": "Decks",
+        "decks": Deck.objects.all(),
+    }
+    return render(request, "decks/decks.html", context)
+
+
 def newdeck(request):
     if request.method == "POST" and request.user.is_authenticated:
         deck = Deck.objects.create_deck(request.POST["name"], request.user)
@@ -115,6 +123,26 @@ def addtodeck(request):
         return HttpResponse("failure")
 
 
+def addtagstodeck(request):
+    deck = Deck.objects.get(id=request.POST["deckid"])
+    if request.method == "POST" and request.user.is_authenticated and deck.author == request.user:
+        newtagstrings = request.POST['tags'].split(",")
+        for newtagstring in newtagstrings:
+            newtagstring = newtagstring.strip()
+        for newtagstring in newtagstrings:
+            try:
+                tag = Tag.objects.get(name=newtagstring)
+            except ObjectDoesNotExist:
+                tag = Tag.objects.create_tag(newtagstring)
+            if not deck in tag.decks.all():
+                tag.decks.add(deck)
+            tag.save()
+        deck.save()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("failure")
+
+
 def removefromdeck(request):
     deck = Deck.objects.get(id=request.POST["deckid"])
     if request.method == "POST" and request.user.is_authenticated and deck.author == request.user:
@@ -133,6 +161,15 @@ def deletedeck(request):
         return HttpResponse("success")
     else:
         return HttpResponse("failure")
+
+
+def displaydeck(request, deckid):
+    deck = Deck.objects.get(id=deckid)
+    context = {
+        "title": "Deck " + str(deckid),
+        "cards": deck.cards.all(),
+    }
+    return render(request, "cards/cards.html", context)
 
 
 def register(request):

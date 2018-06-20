@@ -31,11 +31,14 @@ urlpatterns = [
     path('likecard', views.likecard),
     path('unlikecard', views.unlikecard),
     path('deletecard', views.deletecard),
+    path('decks', views.decks),
     path('newdeck', views.newdeck),
     path('updatedeck', views.updatedeck),
     path('addtodeck', views.addtodeck),
+    path('addtagstodeck', views.addtagstodeck),
     path('removefromdeck', views.removefromdeck),
     path('deletedeck', views.deletedeck),
+    path('displaydeck/<int:deckid>', views.displaydeck),
     path('', views.index),
 ]
 

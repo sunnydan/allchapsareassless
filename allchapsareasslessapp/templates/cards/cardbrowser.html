@@ -72,7 +72,7 @@
             </a>
         </div>
         <div style="display: flex; justify-content: space-between; margin-top: 5px;">
-            <a class="btn blue lighten-1" style="text-align: left; width: 153px; height: 32px; line-height: 32px; margin-right: 5px; flex-grow: 1; text-overflow: ellipsis; overflow: hidden;
+            <a id="cardtags{{card.id}}" class="btn blue lighten-1 cardtags" style="text-align: left; width: 153px; height: 32px; line-height: 32px; margin-right: 5px; flex-grow: 1; text-overflow: ellipsis; overflow: hidden;
                 white-space: nowrap;">
                 {% for tag in card.tags.all %} {{ tag.name }}, {% endfor %}
             </a>

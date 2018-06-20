@@ -19,11 +19,8 @@
                 </div>
             </form>
             <div class="hide-on-small-only">
-                <a class="btn-floating btn-large halfway-fab waves-effect waves-light" href="#" style="margin-right: 63px;">
+                <a class="btn-floating btn-large halfway-fab waves-effect waves-light" href="#">
                     <i class="material-icons">filter_list</i>
-                </a>
-                <a class="btn-floating btn-large halfway-fab waves-effect waves-light modal-trigger" href="#canvasmodal">
-                    <i class="material-icons">add</i>
                 </a>
             </div>
         </div>
@@ -36,14 +33,9 @@
     <a class="btn" href="#" style="width: 49%;">
         <i class="material-icons left">filter_list</i>Sort By:
     </a>
-    <a class="btn waves-effect waves-light modal-trigger" href="#canvasmodal" style="width: 49%;">
-        <i class="material-icons left">add</i>Add Card
-    </a>
 </div>
-{% include 'cards/canvasmodal.html' %}
-<!---->
-<div id="cardbrowser" class="card-panel green darken-2 white-text hide-on-small-only">
-    {% include 'cards/cardbrowser.html' %}
+<div id="deckbrowser" class="card-panel green darken-2 white-text hide-on-small-only">
+    {% include 'decks/deckbrowser.html' %}
 </div>
 <a id="topbutton" class="btn-floating btn-large waves-effect waves-light blue hide-on-small-only" href="#body">
     <i class="material-icons">vertical_align_top</i>

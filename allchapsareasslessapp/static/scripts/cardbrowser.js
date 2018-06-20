@@ -7,6 +7,7 @@ $(document).ready(function () {
     });
     $(window).click(function () {
         $('.cardbuttons').slideUp();
+        $('.deckbuttons').slideUp();
     });
     $(".cardbuttons").click(function () {
         event.stopPropagation();
@@ -14,6 +15,7 @@ $(document).ready(function () {
     $(".cardsvg").click(function (event) {
         event.stopPropagation();
         var cardid = this.id.substr(7);
+        $('.deckbuttons').slideUp();
         $('.cardbuttons:not(#card' + cardid + 'buttons)').slideUp();
         $(this).siblings('#card' + cardid + 'buttons').slideToggle();
     })
@@ -90,6 +92,23 @@ $(document).ready(function () {
             });
         }
     });
+    $(".deletedeck").click(function () {
+        var deckid = this.id.substr(10);
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!(/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+        $.post("/deletedeck", { deckid: deckid }).done(function (data) {
+            if (data == "success") {
+                $("#decksection" + deckid).remove();
+            } else {
+
+            }
+        });
+    });
     $(".addtodeck").click(function () {
         var cardid = this.id.substr(3);
         var deckid = this.title.substr(4);
@@ -107,4 +126,36 @@ $(document).ready(function () {
             }
         });
     });
+    $(".addtags").click(function () {
+        var tags = prompt("New tags, separated by commas:");
+        var deckid = this.id.substr(7);
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!(/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+        $.post("/addtagstodeck", { deckid: deckid, tags: tags }).done(function (data) {
+            if (data == "success") {
+                $("#decktags" + deckid).html(tags);
+            } else {
+
+            }
+        });
+    });
+    $(".deckbuttons").click(function () {
+        event.stopPropagation();
+    })
+    $(".decksection").click(function () {
+        event.stopPropagation();
+        var deckid = this.id.substr(11);
+        console.log(deckid);
+        $('.cardbuttons').slideUp();
+        $('.deckbuttons:not(#deck' + deckid + 'buttons)').slideUp();
+        $(this).children('#deck' + deckid + 'buttons').slideToggle();
+    });
+    $(".decktags, .cardtags").click(function() {
+        alert($(this).html());
+    })
 });

@@ -2,14 +2,67 @@
 <!--START desktop decks-->
 <div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
     {% for deck in decks %}
-    <div id="decksection{{deck.id}}">
-        <div style="position: relative; margin-top: 45px; margin-right: 45px; width: 277px; height: 383px;">
-            <span class="cardsvg" style="z-index: 3; position: absolute;">{{ deck.cards.all.0.svg|safe }}</span>
-            <span class="cardsvg" style="z-index: 2; position: absolute; left: 20px; top: -20px;">{{ deck.cards.all.1.svg|safe }}</span>
-            <span class="cardsvg" style="z-index: 1; position: absolute; left: 40px; top: -40px;">{{ deck.cards.all.2.svg|safe }}</span>
+    <div id="decksection{{deck.id}}" class="decksection">
+        <div id="deckdisplay{{deck.id}}" class="deckdisplay" style="position: relative; margin-top: 45px; margin-right: 45px; width: 277px; height: 383px;">
+            <span class="deckcardsvg" style="z-index: 3; position: absolute;">{{ deck.cards.all.0.svg|safe }}</span>
+            <span class="deckcardsvg" style="z-index: 2; position: absolute; left: 20px; top: -20px;">{{ deck.cards.all.1.svg|safe }}</span>
+            <span class="deckcardsvg" style="z-index: 1; position: absolute; left: 40px; top: -40px;">{{ deck.cards.all.2.svg|safe }}</span>
         </div>
-        <span>{{ deck.name }}</span>
+        <div id="deck{{deck.id}}buttons" class="deckbuttons" style="display: none; padding-left: 5px; padding-right: 5px;">
+            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                <a class="btn-small blue" style="text-align: left; height: 32px; line-height: 32px; margin-right: 5px; flex-grow: 1; text-overflow: ellipsis;">
+                    "{{deck.name}}"
+                </a>
+                <a href="displaydeck/{{deck.id}}" class="btn-small blue lighten-1 cardcount cardcount{{deck.id}}" style="margin-right: 5px;" title="Number of Cards">
+                    <i class="material-icons left">apps</i>{{ deck.cards.all.count }}
+                </a>
+                {% if deck.author == user %} {% endif %}
+                <a class="btn-small blue lighten-1 likingusers likingusers{{deck.id}}" title="Number of Likes">
+                    {{ deck.likingUsers.count }}
+                </a>
+                {% if user.is_authenticated %} {% if user in deck.likingUsers.all %}
+                <a id="unlike{{deck.id}}" class="btn-floating btn-small waves-effect waves-red blue unlike" title="Unlike" style="margin-left: 5px;">
+                    <i class="material-icons">star_half</i>
+                </a>
+                {% elif deck.author != user %}
+                <a id="like{{deck.id}}" class="btn-floating btn-small waves-effect waves-yellow blue like" title="Like" style="margin-left: 5px;">
+                    <i class="material-icons">star</i>
+                </a>
+                {% endif %} {% endif %}
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                <a id="decktags{{deck.id}}" class="btn blue lighten-1 decktags" style="text-align: left; width: 153px; height: 32px; line-height: 32px; flex-grow: 1; text-overflow: ellipsis; overflow: hidden;
+                    white-space: nowrap;">
+                    {% for tag in deck.tags.all %} {{ tag.name }}, {% endfor %}
+                </a>
+                {% if deck.author == user %}
+                <a id="addtags{{deck.id}}" class="btn-floating btn-small waves-effect waves-red blue addtags" title="Add Tags">
+                    <i class="material-icons">edit</i>
+                </a>
+                {% endif %}
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                <a class="btn-small blue" style="text-align: left; height: 32px; line-height: 32px; flex-grow: 1; text-overflow: ellipsis;">
+                    BY: {{ deck.author.displayName }}
+                </a>
+                {% if deck.author == user %}
+                <a id="deletedeck{{deck.id}}" class="btn-floating btn-small waves-effect waves-red blue deletedeck" title="Delete Deck">
+                    <i class="material-icons">close</i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
     </div>
     {% endfor %}
 </div>
 <!--END desktop decks-->
+<style>
+    .deckcardsvg svg {
+        border: solid black 5px;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+        margin: 7px;
+        cursor: pointer;
+    }
+</style>
