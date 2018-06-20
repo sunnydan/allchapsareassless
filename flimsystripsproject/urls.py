@@ -40,6 +40,7 @@ urlpatterns = [
     path('deletedeck', views.deletedeck),
     path('displaydeck/<int:deckid>', views.displaydeck),
     path('', views.index),
+    path('chat/', include('flimsystripsgame.urls')),
 ]
 
 if settings.DEBUG:
